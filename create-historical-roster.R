@@ -30,17 +30,26 @@ team.name.list<-unique(unlist(team.name.list))[4:35]
 ```
 The variable team.name.list generates a list of names for all 32 teams
 
-Function to grab urls for all rosters
-```{r}
+On each teams default roster page (for their most current season, 2014), there
+is a section that contains links to all past rosters.  Since team names (such as the 
+Cardinals being the Phoenix Cardinals and then the Arizona Cardinals) and league 
+affiliations change (such as some teams being in the AFL before the NFL-AFL merger),
+grabbing the URLs for all past rosters bypasses this problem.
 
+```{r}
 getRosterURLs<-function(team){
+    #goes to default roster page
     roster.urls<-paste0('http://www.footballdb.com/teams/nfl/', team, '/roster')
+    #grabs html code for that page
     team.roster.list<-htmlTreeParse(roster.urls,useInternalNodes = T)
-    each.year.url<-xpathSApply(team.roster.list,"//div[@class='fifth fleft']/a[@href]",xmlGetAttr,'href')
+    #looks in each div that has the class 'fifth fleft' returns the value of the
+    #href within each anchor. This gives the URL for each year's roster
+    each.year.url<-xpathSApply(team.roster.list,
+                               "//div[@class='fifth fleft']/a[@href]",
+                               xmlGetAttr,'href')
+    #returns all the urls
     return(each.year.url)
 }
-getRosterURLs(team.name.list[2])
-
 ```
 
 ```{r}
