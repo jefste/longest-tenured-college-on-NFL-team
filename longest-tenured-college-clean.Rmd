@@ -78,26 +78,15 @@ for (team in team.name.list){
         college.list<-intersect(college.list,college.list.next)
         # if there is no intersection, there are no elements in college.list
         if (length(college.list)<1) {
-            # if the old college list had more than one entry
-            if(length(old.college.list)>1){
-                # loop through each college in the list
-                for(name in old.college.list){
-                    #create a vector to add the name team and year to running list
-                    add.to.list<-c(team,name,last.year)
-                    #bind the row just created to the running list
-                    running.list<-rbind(running.list,add.to.list)
-                }
-                #break loop after writing all entries to list
-                break
-            }
-            else { # this case is when there is only one element. Could get rid of this?
+            # use for loop in case the old college list had more than one entry
+            for(name in old.college.list){
                 #create a vector to add the name team and year to running list
-                add.to.list<-c(team,old.college.list,last.year)
+                add.to.list<-c(team,name,last.year)
                 #bind the row just created to the running list
                 running.list<-rbind(running.list,add.to.list)
-                #break loop after writing the entry to list
-                break
-            }
+                }
+            #break loop after writing all entries to list
+            break
         }
         old.college.list<-college.list
         last.year<-year
