@@ -30,8 +30,6 @@ roster.master.list<-roster.master.list[-1,]
 colnames(roster.master.list)<-c('number','name','position','games played',
                                 'games started','DOB','college','roster year',
                                 'team')
-
-
 ```
 
     
@@ -39,76 +37,99 @@ colnames(roster.master.list)<-c('number','name','position','games played',
 
 Initialize running.list
 ```{r}
+#create list with placeholder variables
+## use placeholder so that when adding variables strings do not get 
+## added as factors
 running.list<-data.frame('name','school','9999', stringsAsFactors = F)
+# name the columns of the data frame
 colnames(running.list)<-c('team','school','year')
-running.list
-str(running.list)
 ```
 
-
+This chunk sorts through the master list to find which college has the longest
+current tenure for each NFL team.
 ```{r}
 
-
+# loops through for every team
 for (team in team.name.list){
-    last.year<-'2014'
+    ### the first section essentially initializes the variable before
+    ### stepping through each year for the current team
+    #create boolean vector that gives True for entries that match the
+    #current team in for loop
     bool.team<-roster.master.list[,'team']==team 
-    bool.year<-roster.master.list[,'roster year']=='2014'
-    college.list<-unique(roster.master.list[bool.team & bool.year,'college'])
+    #create list of years to look loop through 
     year.list<-unique(roster.master.list[bool.team, 'roster year'])
+    #sort year list so that it starts with 2014
     year.list<-(sort(year.list,decreasing = T))
-    for (year in year.list){
+    #create boolean vector giving True for entries that match 2014
+    bool.year<-roster.master.list[,'roster year']==year.list[1]
+    #initalize last year to 2014
+    last.year<-year.list[1]
+    #create a list of all unique college names that match bool.team and bool.year
+    college.list<-unique(roster.master.list[bool.team & bool.year,'college'])
+    #loops through all years. [-1] omits the first year since it was used for 
+    # initialization
+    for (year in year.list[-1]){
+        #create boolean vector returning True to match current year
         bool.year<-roster.master.list[,'roster year']==year
+        #create college list of unique names that matches the current year and team
         college.list.next<-unique(roster.master.list[bool.year & bool.team,'college'])
+        # determine the intersection of the previous years college list to the 
+        # current years college list
         college.list<-intersect(college.list,college.list.next)
+        # if there is no intersection, there are no elements in college.list
         if (length(college.list)<1) {
+            # if the old college list had more than one entry
             if(length(old.college.list)>1){
-                print(old.college.list)
+                # loop through each college in the list
                 for(name in old.college.list){
+                    #create a vector to add the name team and year to running list
                     add.to.list<-c(team,name,last.year)
+                    #bind the row just created to the running list
                     running.list<-rbind(running.list,add.to.list)
                 }
+                #break loop after writing all entries to list
                 break
             }
-            else {
+            else { # this case is when there is only one element. Could get rid of this?
+                #create a vector to add the name team and year to running list
                 add.to.list<-c(team,old.college.list,last.year)
+                #bind the row just created to the running list
                 running.list<-rbind(running.list,add.to.list)
+                #break loop after writing the entry to list
                 break
             }
-            
-            
-            #running.list<-rbind(running.list,add.to.list)
-                    
         }
         old.college.list<-college.list
         last.year<-year
     }
-    #if(length(college.list)>0){}
 }
 
-
-running.list
+#show the head and tail to confirm list was made correctly
+head(running.list)
+tail(running.list)
 ```
 
+Format the list for nicer output and save to CSV. This step is basically 
+cosmetic before saving as a CSV.
 ```{r}
 #get rid of initialization value
 nice.list<-running.list[-1,]
 
-#get rid of -
+#get rid of dash '-' and replace with a space in the first column
 nice.list[,1]<-gsub("-"," ",nice.list[,1])
 
 #function to capitalizes the first letter of each separte string
-##found on StackEx?
+##found this function on on StackEx?
 .simpleCap <- function(x) {
     s <- strsplit(x, " ")[[1]]
     paste(toupper(substring(s, 1, 1)), substring(s, 2),
           sep = "", collapse = " ")
 }
-#capitalize team names
+
+#capitalize first letter of team names
 nice.list[,1]<-sapply(nice.list[,1],.simpleCap)
-nice.list
 
-
+#save to csv file
 write.csv(nice.list,file='team_college_nice.csv')
-
 ```
 
