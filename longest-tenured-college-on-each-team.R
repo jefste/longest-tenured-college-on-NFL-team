@@ -1,14 +1,5 @@
----
-title: "Longest Tenured College on Each Team in the NFL"
-author: "Jeff Stevens"
-date: "03/11/2015"
-output: html_document
----
 
-
-
-Gets the names for teams
-```{r}
+#Gets the names for teams
 library(XML)
 
 #strip out names for urls
@@ -17,10 +8,8 @@ src = xpathApply(getnameshtml, "//a[@href]", xmlGetAttr, "href")
 teams.bool<-grepl(src,pattern = '/teams/nfl/')
 team.name.list<-sapply(src[teams.bool],strsplit,"/")
 team.name.list<-unique(unlist(team.name.list))[4:35]
-```
 
-Load complete roster info
-```{r}
+#Load complete roster info
 roster.master.list<-read.csv('complete-roster-info.csv')
 #eliminates the first column, which was previously the number
 roster.master.list<-roster.master.list[,-1]
@@ -30,24 +19,21 @@ roster.master.list<-roster.master.list[-1,]
 colnames(roster.master.list)<-c('number','name','position','games played',
                                 'games started','DOB','college','roster year',
                                 'team')
-```
 
     
 
 
-Initialize running.list
-```{r}
+#Initialize running.list
+
 #create list with placeholder variables
 ## use placeholder so that when adding variables strings do not get 
 ## added as factors
 running.list<-data.frame('name','school','9999', stringsAsFactors = F)
 # name the columns of the data frame
 colnames(running.list)<-c('team','school','year')
-```
 
-This chunk sorts through the master list to find which college has the longest
-current tenure for each NFL team.
-```{r}
+#This chunk sorts through the master list to find which college has the longest
+#current tenure for each NFL team.
 
 # loops through for every team
 for (team in team.name.list){
@@ -96,11 +82,10 @@ for (team in team.name.list){
 #show the head and tail to confirm list was made correctly
 head(running.list)
 tail(running.list)
-```
 
-Format the list for nicer output and save to CSV. This step is basically 
-cosmetic before saving as a CSV.
-```{r}
+#Format the list for nicer output and save to CSV. This step is basically 
+#cosmetic before saving as a CSV.
+
 #get rid of initialization value
 nice.list<-running.list[-1,]
 
@@ -120,5 +105,4 @@ nice.list[,1]<-sapply(nice.list[,1],.simpleCap)
 
 #save to csv file
 write.csv(nice.list,file='team_college_nice.csv')
-```
 
