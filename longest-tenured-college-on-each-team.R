@@ -102,6 +102,6 @@ nice.list[,1]<-gsub("-"," ",nice.list[,1])
 #capitalize first letter of team names
 nice.list[,1]<-sapply(nice.list[,1],.simpleCap)
 
-#save to csv file
-write.csv(nice.list,file='team_college_nice.csv')
+#save to csv file, omit row names
+write.csv(nice.list,file='team_college_nice.csv',row.names=F)
 
