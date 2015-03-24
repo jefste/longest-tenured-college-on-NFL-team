@@ -15,10 +15,9 @@ roster.master.list<-read.csv('complete-roster-info.csv')
 roster.master.list<-roster.master.list[,-1]
 #eliminate the first row, which was the 'x' initialization placeholder
 roster.master.list<-roster.master.list[-1,]
-#name the columns, as reading from CSV does not retain format of original col names
-colnames(roster.master.list)<-c('number','name','position','games played',
-                                'games started','DOB','college','roster year',
-                                'team')
+#remove the period in column names, as reading from CSV does not retain format 
+# of original col names
+colnames(roster.master.list)<-gsub('\\.',' ',colnames(roster.master.list))
 
     
 
