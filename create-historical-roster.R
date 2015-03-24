@@ -93,6 +93,16 @@ for(team in team.name.list){
     }
 
 
+#trims the whitespace at the end of of college name which consists of a 
+# space and a non-breaking space, and can be written as in hexdecimal as 
+# \x20\xc2\xa0. When these 2 characters are found in succession, gsub replaces
+# with '', effectively deleting them
+roster.master.list[,'college']<-gsub("\x20\xc2\xa0", "",
+                                     #need to convert from factor to character
+                                     as.character(roster.master.list[,'college']))
+
+
+
 #saves to CSV file
 write.csv(roster.master.list,file='complete-roster-info.csv')
 
