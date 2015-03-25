@@ -19,6 +19,9 @@ team.name.list<-sapply(src[teams.bool],strsplit,"/")
 #subset the 4th through 35th elements (done by inspection, better method available?)
 team.name.list<-unique(unlist(team.name.list))[4:35]
 
+#write team names to CSV
+write.csv(team.name.list,file='team-names.csv',row.names=F)
+
 #The variable team.name.list generates a list of names for all 32 teams
 
 #On each teams default roster page (for their most current season, 2014), there
