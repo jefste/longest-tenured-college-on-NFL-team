@@ -1,13 +1,7 @@
 
-#Gets the names for teams
-library(XML)
-
-#strip out names for urls
-getnameshtml<-htmlTreeParse('http://www.footballdb.com/teams/index.html',useInternalNodes = T)
-src = xpathApply(getnameshtml, "//a[@href]", xmlGetAttr, "href")
-teams.bool<-grepl(src,pattern = '/teams/nfl/')
-team.name.list<-sapply(src[teams.bool],strsplit,"/")
-team.name.list<-unique(unlist(team.name.list))[4:35]
+#Read the names for teams from CSV
+names<-read.csv('team-names.csv',stringsAsFactors=F)
+team.name.list<-names$x
 
 #Load complete roster info
 roster.master.list<-read.csv('complete-roster-info.csv')
