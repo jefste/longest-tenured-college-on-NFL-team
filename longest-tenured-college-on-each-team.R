@@ -1,8 +1,4 @@
 
-#Read the names for teams from CSV
-names<-read.csv('team-names.csv',stringsAsFactors=F)
-team.name.list<-names$x
-
 #Load complete roster info
 roster.master.list<-read.csv('complete-roster-info.csv')
 #eliminates the first column, which was previously the number
@@ -13,6 +9,8 @@ roster.master.list<-roster.master.list[-1,]
 # of original col names
 colnames(roster.master.list)<-gsub('\\.',' ',colnames(roster.master.list))
 
+#Read the names for teams from CSV
+team.name.list<-unique(roster.master.list[,'team'])
     
 
 
