@@ -1,6 +1,8 @@
-Scripts in this REPO
-====================
- * Generate a list of all players on NFL rosters from 1960 - 2014, save to complete-roster-info.csv
+Scripts in this repository
+=========================
+This repository contains a script that scapes the web to create a historical roster of all players on NFL rosters from 1960 - 2014, save to complete-roster-info.csv
+
+From this historical roster, several scripts run including:
  * Determine the longest tenured college for each NFL team using complete-roster-info.csv
  * Determine the number of players each college has had from 1960 - 2014
  * Determine the number of years in the league for each player from 1960 - 2014
